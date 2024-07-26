@@ -17,4 +17,4 @@ import database from './data/mysqldatabase';
     } catch (error) {
         console.error(`Erro interno na API. Mensagem: ${error}`);
     }
-})
+})();

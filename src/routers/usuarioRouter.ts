@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import usuarioController from '../controllers/usuarioController';
+import { validarAutorizacao } from './middlewares/usuarioMiddleware';
 
 const router = Router();
 

@@ -27,6 +27,18 @@ async function create(req: Request, res: Response, next: any){
     }
 }
 
+async function logarUsuario(req: Request, res: Response, next: any){
+    try {
+        const usuarioLogin = req.body as iUsuario;
+
+        const verifyAccount = await usuarioRepository.findOne(usuarioLogin);
+
+    } catch (error) {
+        console.error(error);
+        res.status(StatusCodes.BAD_REQUEST).end();
+    }
+}
+
 export default {
     create
 }
