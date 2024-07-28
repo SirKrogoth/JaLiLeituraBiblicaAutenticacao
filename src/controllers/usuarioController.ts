@@ -4,6 +4,7 @@ import usuarioRepository from '../models/usuario/repository/usuarioRepository';
 import iUsuario from '../models/usuario/interface/iUsuario';
 import autenticacao from '../secure/autenticacao';
 import { StatusCodes } from 'http-status-codes';
+import autorizacao from '../secure/autorizacao';
 
 async function create(req: Request, res: Response, next: any){
     try {
@@ -31,7 +32,22 @@ async function logarUsuario(req: Request, res: Response, next: any){
     try {
         const usuarioLogin = req.body as iUsuario;
 
-        const verifyAccount = await usuarioRepository.findOne(usuarioLogin);
+        const verifyAccount = await usuarioRepository.findOne(usuarioLogin.usuario);
+
+        if(verifyAccount === null ) return res.status(StatusCodes.BAD_REQUEST).end();
+
+        const isValid = autenticacao.comparePassword(usuarioLogin.senha, verifyAccount.senha);
+
+        if(isValid){
+            const token = await autorizacao.sign(verifyAccount.id);
+
+            return res.status(StatusCodes.OK).json({
+                auth: true,
+                token
+            });
+        } else {
+            return res.status(StatusCodes.BAD_REQUEST).end();
+        }
 
     } catch (error) {
         console.error(error);
@@ -40,5 +56,6 @@ async function logarUsuario(req: Request, res: Response, next: any){
 }
 
 export default {
-    create
+    create,
+    logarUsuario
 }

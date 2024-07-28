@@ -7,10 +7,10 @@ const publicKey = fs.readFileSync('./keys/public.key', 'utf-8');
 const jwtExpires = parseInt(`${process.env.JWT_EXPIRES}`);
 const jwtAlgorithm = "RS256";
 
-type Token = { id: number }
+type Token = { id: string }
 
 
-function sign(id: number){
+function sign(id: string){
     const token: Token = { id }
 
     return jwt.sign(token, privateKey, {
@@ -21,9 +21,9 @@ function sign(id: number){
 
 async function verifiy(token: string){
     try {
-        const decoded : Token = await jwt.verify(token, publicKey, {
-            algorithms: [jwtAlgorithm]
-        } as VerifyOptions) as Token;
+        const decoded : Token = await jwt.verify(token, publicKey, { algorithms: [jwtAlgorithm] } as VerifyOptions) as Token;
+
+        return decoded;
     } catch (error) {
         console.error("Mensagem: " + error);
         return null;

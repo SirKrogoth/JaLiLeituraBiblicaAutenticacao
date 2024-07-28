@@ -4,6 +4,7 @@ import { validarAutorizacao } from './middlewares/usuarioMiddleware';
 
 const router = Router();
 
-router.post('/usuario', usuarioController.create);
+router.post('/usuario', validarAutorizacao, usuarioController.create);
+router.post('/login', usuarioController.logarUsuario);
 
 export default router;
